@@ -45,5 +45,6 @@
         android:layout_marginBottom="81dp"
         android:id="@+id/controllerButton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:onClick="controlTimer"/>
 </RelativeLayout>
