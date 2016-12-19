@@ -1,5 +1,6 @@
 package ainor.com.my.eggtimer;
 
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         timerTextView.setText( Integer.toString(minutes) + ":" + secondString);
     }
 
-    public void controlTimer(View view) {
+    public void controlTimer (View view) {
         new CountDownTimer(timerSeekBar.getProgress() * 1000 + 100, 1000) {
 
             @Override
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
 
                 timerTextView.setText("0:00");
-                Log.i("finished", "timer is done!");
+
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.airhorn);
+                mediaPlayer.start();
             }
         }.start();
     }
