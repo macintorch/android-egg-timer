@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -13,6 +14,20 @@ public class MainActivity extends AppCompatActivity {
 
     SeekBar timerSeekBar;
     TextView timerTextView;
+    Button controllerButton;
+    Boolean counterIsActive = false;
+    CountDownTimer mCountDownTimer;
+
+    public void resetTimer(){
+
+        timerTextView.setText("0:05");
+        timerSeekBar.setProgress(5);
+        mCountDownTimer.cancel();
+        controllerButton.setText("GO!");
+        timerSeekBar.setEnabled(true);
+        counterIsActive = false;
+
+    }
 
     public void updateTimer (int secondLeft) {
         int minutes = (int) secondLeft / 60;
@@ -30,28 +45,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void controlTimer (View view) {
-        new CountDownTimer(timerSeekBar.getProgress() * 1000 + 100, 1000) {
 
-            @Override
-            public void onTick(long l) {
-                updateTimer((int) l/1000);
-            }
+        if (counterIsActive == false) {
 
-            @Override
-            public void onFinish() {
+            counterIsActive = true;
+            timerSeekBar.setEnabled(false);
+            controllerButton.setText("STOP!");
 
-                timerTextView.setText("0:00");
+            mCountDownTimer = new CountDownTimer(timerSeekBar.getProgress() * 1000 + 100, 1000) {
 
-                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.airhorn);
-                mediaPlayer.start();
-            }
-        }.start();
+                @Override
+                public void onTick(long l) {
+                    updateTimer((int) l / 1000);
+                }
+
+                @Override
+                public void onFinish() {
+
+                    timerTextView.setText("0:00");
+
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.airhorn);
+                    mediaPlayer.start();
+                    resetTimer();
+                }
+            }.start();
+        } else {
+            resetTimer();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        controllerButton = (Button) findViewById(R.id.controllerButton);
+
 
         timerSeekBar = (SeekBar) findViewById(R.id.timerSeekBar);
 
